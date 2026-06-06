@@ -1,0 +1,14 @@
+/vendor
+/node_modules
+/.env
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/app/public/task-assets/*
+!/storage/app/public/task-assets/.gitkeep
+/public/storage
+/public/hot
+/public/build
+.DS_Store
+Thumbs.db
+*.log
