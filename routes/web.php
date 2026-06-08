@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks/{task}/assets/image', [App\Http\Controllers\AssetController::class, 'storeImage'])->name('assets.store-image');
     Route::post('/tasks/{task}/assets/video', [App\Http\Controllers\AssetController::class, 'storeVideo'])->name('assets.store-video');
     Route::delete('/assets/{asset}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('assets.destroy');
+    Route::post('/projects/{project}/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
 });
 
 

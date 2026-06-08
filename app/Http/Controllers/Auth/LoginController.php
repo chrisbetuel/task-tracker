@@ -36,6 +36,7 @@ class LoginController extends Controller
 
         return match ($user->role) {
             UserRole::Admin => redirect()->intended(route('admin.dashboard')),
+            UserRole::HeadOfOperation => redirect()->intended(route('admin.dashboard')),
             UserRole::Manager => redirect()->intended(route('manager.dashboard')),
             UserRole::TeamMember => redirect()->intended(route('member.dashboard')),
         };

@@ -8,7 +8,7 @@ use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin_or_hoo'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
     Route::resource('departments', DepartmentController::class);
     Route::resource('users', UserController::class);

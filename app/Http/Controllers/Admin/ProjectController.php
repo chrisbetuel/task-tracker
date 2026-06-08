@@ -46,8 +46,14 @@ class ProjectController extends Controller
 
     public function show(Project $project, ReportingService $reporting)
     {
-        $project->load(['department', 'children.tasks', 'tasks' => function ($q) {
-            $q->with(['assignee', 'activeBlockages', 'timeLogs'])->latest();
+        $project->load(['department', 'children.tasks', 'comments' => function ($q) {
+            $q->with('user')->latest();
+        }, 'tasks' => function ($q) {
+            $q->whereNull('parent_task_id')
+              ->with(['assignee', 'activeBlockages', 'timeLogs', 'children' => function ($q) {
+                  $q->with(['assignee', 'activeBlockages', 'timeLogs'])->latest();
+              }])
+              ->latest();
         }]);
 
         $progress = $reporting->projectProgress($project);

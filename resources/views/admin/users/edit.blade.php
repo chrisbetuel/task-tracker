@@ -26,6 +26,7 @@
                 <label for="role" class="form-label">Role</label>
                 <select class="form-select @error('role') is-invalid @enderror" name="role" required>
                     <option value="admin" {{ $user->role->value === 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="head_of_operation" {{ $user->role->value === 'head_of_operation' ? 'selected' : '' }}>Head of Operation</option>
                     <option value="manager" {{ $user->role->value === 'manager' ? 'selected' : '' }}>Manager</option>
                     <option value="team_member" {{ $user->role->value === 'team_member' ? 'selected' : '' }}>Team Member</option>
                 </select>

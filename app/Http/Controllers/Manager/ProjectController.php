@@ -107,7 +107,11 @@ class ProjectController extends Controller
         $timeSpent = $reporting->timeSpentByProject($project);
 
         $project->load(['tasks' => function ($q) {
-            $q->with(['assignee', 'activeBlockages', 'assets'])->latest();
+            $q->whereNull('parent_task_id')
+              ->with(['assignee', 'activeBlockages', 'assets', 'children' => function ($q) {
+                  $q->with(['assignee', 'activeBlockages', 'assets'])->latest();
+              }])
+              ->latest();
         }, 'children']);
 
         return view('manager.projects.show', compact('project', 'progress', 'timeSpent'));

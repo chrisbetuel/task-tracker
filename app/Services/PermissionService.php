@@ -8,9 +8,14 @@ use App\Models\User;
 
 class PermissionService
 {
+    public function hasAdminAccess(User $user): bool
+    {
+        return $user->isAdmin() || $user->isHeadOfOperation();
+    }
+
     public function userCanViewDepartment(User $user, Department $department): bool
     {
-        if ($user->isAdmin()) {
+        if ($this->hasAdminAccess($user)) {
             return true;
         }
 
@@ -19,7 +24,7 @@ class PermissionService
 
     public function userCanManageDepartment(User $user, Department $department): bool
     {
-        if ($user->isAdmin()) {
+        if ($this->hasAdminAccess($user)) {
             return true;
         }
 
@@ -28,7 +33,7 @@ class PermissionService
 
     public function userCanManageUser(User $user, User $targetUser): bool
     {
-        if ($user->isAdmin()) {
+        if ($this->hasAdminAccess($user)) {
             return true;
         }
 
@@ -41,7 +46,7 @@ class PermissionService
 
     public function userCanViewAuditLogs(User $user, ?Department $department = null): bool
     {
-        if ($user->isAdmin()) {
+        if ($this->hasAdminAccess($user)) {
             return true;
         }
 

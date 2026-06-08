@@ -23,6 +23,7 @@
                 <select name="role" class="form-select">
                     <option value="">All Roles</option>
                     <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="head_of_operation" {{ request('role') === 'head_of_operation' ? 'selected' : '' }}>Head of Operation</option>
                     <option value="manager" {{ request('role') === 'manager' ? 'selected' : '' }}>Manager</option>
                     <option value="team_member" {{ request('role') === 'team_member' ? 'selected' : '' }}>Team Member</option>
                 </select>
@@ -47,7 +48,7 @@
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td><span class="badge bg-{{ $user->role->value === 'admin' ? 'danger' : ($user->role->value === 'manager' ? 'warning' : 'info') }}">{{ $user->role->label() }}</span></td>
+                    <td><span class="badge bg-{{ $user->role->value === 'admin' ? 'danger' : ($user->role->value === 'head_of_operation' ? 'dark' : ($user->role->value === 'manager' ? 'warning' : 'info')) }}">{{ $user->role->label() }}</span></td>
                     <td>{{ $user->department?->name ?? 'N/A' }}</td>
                     <td>
                         <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning">Edit</a>

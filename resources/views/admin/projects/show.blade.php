@@ -69,6 +69,37 @@
 </div>
 @endif
 
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-chat-dots"></i> Comments ({{ $project->comments->count() }})
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ route('comments.store', $project) }}" class="mb-3">
+            @csrf
+            <div class="mb-2">
+                <textarea name="body" class="form-control" rows="2" placeholder="Write a comment..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm"><i class="bi bi-send"></i> Add Comment</button>
+        </form>
+
+        @if($project->comments->count())
+            <div class="list-group list-group-flush">
+                @foreach($project->comments as $comment)
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between">
+                            <strong class="text-primary">{{ $comment->user->name }}</strong>
+                            <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                        </div>
+                        <p class="mb-0 mt-1" style="white-space:pre-wrap">{{ $comment->body }}</p>
+                    </div>
+                @endforeach
+            </div>
+        @else
+            <p class="text-muted mb-0">No comments yet.</p>
+        @endif
+    </div>
+</div>
+
 @if($project->children->count())
 <div class="card mb-4">
     <div class="card-header">Sub-Projects ({{ $project->children->count() }})</div>
@@ -132,7 +163,8 @@
 @endif
 
 <div class="card">
-    <div class="card-header">Tasks ({{ $project->tasks->count() }})</div>
+    @php $totalTasks = $project->tasks->count() + $project->tasks->sum(fn($t) => $t->children->count()); @endphp
+    <div class="card-header">Tasks ({{ $totalTasks }})</div>
     <div class="card-body p-0">
         @if($project->tasks->count())
         <table class="table table-sm table-hover mb-0">
@@ -150,12 +182,11 @@
             </thead>
             <tbody>
                 @foreach($project->tasks as $task)
-                <tr class="{{ $task->isOverdue() ? 'table-danger' : '' }}">
+                <tr class="table-active {{ $task->isOverdue() ? 'table-danger' : '' }}">
                     <td>
+                        <i class="bi bi-diagram-2 me-1 text-muted"></i>
                         <span class="fw-semibold">{{ $task->title }}</span>
-                        @if($task->parent_task_id)
-                            <span class="badge bg-info text-dark" style="font-size:0.55rem">SUB</span>
-                        @endif
+                        <span class="badge bg-info ms-1">{{ $task->children->count() }} sub</span>
                     </td>
                     <td>
                         <span class="badge bg-{{ $task->status->value === 'done' ? 'success' : ($task->status->value === 'blocked' ? 'danger' : ($task->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">
@@ -188,6 +219,44 @@
                         </a>
                     </td>
                 </tr>
+                @foreach($task->children as $child)
+                <tr class="{{ $child->isOverdue() ? 'table-danger' : '' }}">
+                    <td style="padding-left: 2.5rem;">
+                        <i class="bi bi-arrow-return-right me-1 text-muted"></i>
+                        <span class="fw-semibold">{{ $child->title }}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-{{ $child->status->value === 'done' ? 'success' : ($child->status->value === 'blocked' ? 'danger' : ($child->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">
+                            {{ $child->status->label() }}
+                        </span>
+                    </td>
+                    <td><span class="badge {{ $child->priority->badgeClass() }}" style="font-size:0.6rem">{{ $child->priority->label() }}</span></td>
+                    <td><small>{{ $child->assignee?->name ?? '—' }}</small></td>
+                    <td>
+                        @php $taskUrl = $child->effectiveProjectUrl(); @endphp
+                        @if($taskUrl)
+                        <a href="{{ $taskUrl }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="{{ $taskUrl }}">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                        </a>
+                        @else
+                        <span class="text-muted">—</span>
+                        @endif
+                    </td>
+                    <td>
+                        @if($child->due_date)
+                            <small class="{{ $child->isOverdue() ? 'text-danger fw-bold' : '' }}">{{ $child->due_date->format('M d') }}</small>
+                        @else
+                            <small class="text-muted">—</small>
+                        @endif
+                    </td>
+                    <td><small>{{ $child->totalTimeLogged() > 0 ? round($child->totalTimeLogged() / 60, 1) . 'h' : '—' }}</small></td>
+                    <td>
+                        <a href="{{ route('admin.assets.index', ['task_id' => $child->id]) }}" class="btn btn-sm btn-outline-info py-0 px-1" title="View Media">
+                            <i class="bi bi-images"></i>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
                 @endforeach
             </tbody>
         </table>

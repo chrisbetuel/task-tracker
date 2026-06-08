@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AdminOrHeadOfOperationMiddleware;
+use App\Http\Middleware\HeadOfOperationMiddleware;
 use App\Http\Middleware\ManagerMiddleware;
 use App\Http\Middleware\TeamMemberMiddleware;
 use Illuminate\Foundation\Application;
@@ -17,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'admin_or_hoo' => AdminOrHeadOfOperationMiddleware::class,
+            'head_of_operation' => HeadOfOperationMiddleware::class,
             'manager' => ManagerMiddleware::class,
             'team_member' => TeamMemberMiddleware::class,
         ]);

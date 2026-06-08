@@ -40,7 +40,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', 'string', 'in:admin,manager,team_member'],
+            'role' => ['required', 'string', 'in:admin,head_of_operation,manager,team_member'],
             'department_id' => ['nullable', 'string', 'exists:departments,id'],
         ]);
 
@@ -62,7 +62,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['required', 'string', 'in:admin,manager,team_member'],
+            'role' => ['required', 'string', 'in:admin,head_of_operation,manager,team_member'],
             'department_id' => ['nullable', 'string', 'exists:departments,id'],
             'password' => ['nullable', 'string', 'min:8'],
         ]);

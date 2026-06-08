@@ -106,6 +106,11 @@ class User extends Authenticatable
         return $this->role === UserRole::Admin;
     }
 
+    public function isHeadOfOperation(): bool
+    {
+        return $this->role === UserRole::HeadOfOperation;
+    }
+
     public function isManager(): bool
     {
         return $this->role === UserRole::Manager;

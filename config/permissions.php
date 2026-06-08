@@ -3,6 +3,7 @@
 return [
     'roles' => [
         'admin' => 'admin',
+        'head_of_operation' => 'head_of_operation',
         'manager' => 'manager',
         'team_member' => 'team_member',
     ],
@@ -14,6 +15,12 @@ return [
             'manage_all_users',
             'view_all_audit_logs',
             'view_all_reports',
+        ],
+        'head_of_operation' => [
+            'view_all_departments',
+            'view_all_audit_logs',
+            'view_all_reports',
+            'manage_all_users',
         ],
         'manager' => [
             'view_department',

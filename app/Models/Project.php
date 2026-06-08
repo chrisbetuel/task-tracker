@@ -86,6 +86,11 @@ class Project extends Model
         return $this->hasMany(Asset::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function allDescendantIds(): array
     {
         $ids = [];

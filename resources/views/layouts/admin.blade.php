@@ -4,7 +4,9 @@
 <div class="row">
     <div class="col-lg-3">
         <div class="card sidebar-card mb-4">
-            <div class="card-header">Admin Panel</div>
+            <div class="card-header">
+                @if(auth()->user()->isAdmin()) Admin Panel @else Head of Operation Panel @endif
+            </div>
             <div class="list-group list-group-flush">
                 <a href="{{ route('admin.dashboard') }}" class="list-group-item list-group-item-action{{ request()->routeIs('admin.dashboard') ? ' active' : '' }}">
                     <i class="bi bi-speedometer2"></i> Dashboard

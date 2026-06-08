@@ -31,6 +31,7 @@
                 <label for="role" class="form-label">Role</label>
                 <select class="form-select @error('role') is-invalid @enderror" name="role" required>
                     <option value="admin">Admin</option>
+                    <option value="head_of_operation">Head of Operation</option>
                     <option value="manager">Manager</option>
                     <option value="team_member" selected>Team Member</option>
                 </select>
