@@ -144,22 +144,24 @@
             </div>
             <div class="card-body p-0">
                 @if($task->children->count())
-                <table class="table table-sm mb-0">
-                    <thead>
-                        <tr><th>Title</th><th>Status</th><th>Priority</th><th>Assignee</th><th>Due</th></tr>
-                    </thead>
-                    <tbody>
-                        @foreach($task->children as $child)
-                        <tr class="{{ $child->isOverdue() ? 'table-danger' : '' }}">
-                            <td><a href="{{ route('manager.tasks.show', $child) }}">{{ $child->title }}</a></td>
-                            <td><span class="badge bg-{{ $child->status->value === 'done' ? 'success' : ($child->status->value === 'blocked' ? 'danger' : ($child->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">{{ $child->status->label() }}</span></td>
-                            <td><span class="badge {{ $child->priority->badgeClass() }}" style="font-size:0.65rem">{{ $child->priority->label() }}</span></td>
-                            <td>{{ $child->assignee?->name ?? '—' }}</td>
-                            <td>{{ $child->due_date?->format('M d') ?? '—' }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr><th>Title</th><th>Status</th><th>Priority</th><th>Assignee</th><th>Due</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach($task->children as $child)
+                            <tr class="{{ $child->isOverdue() ? 'table-danger' : '' }}">
+                                <td><a href="{{ route('manager.tasks.show', $child) }}">{{ $child->title }}</a></td>
+                                <td><span class="badge bg-{{ $child->status->value === 'done' ? 'success' : ($child->status->value === 'blocked' ? 'danger' : ($child->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">{{ $child->status->label() }}</span></td>
+                                <td><span class="badge {{ $child->priority->badgeClass() }}" style="font-size:0.65rem">{{ $child->priority->label() }}</span></td>
+                                <td>{{ $child->assignee?->name ?? '—' }}</td>
+                                <td>{{ $child->due_date?->format('M d') ?? '—' }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
                 @else
                 <p class="text-muted p-3 mb-0">No sub-tasks yet. Click "Add Sub-Task" to break this task into smaller pieces.</p>
                 @endif
@@ -189,21 +191,23 @@
                 <span class="badge bg-info ms-2">{{ $task->totalTimeLogged() }} min total</span>
             </div>
             <div class="card-body">
-                <table class="table table-sm">
-                    <thead>
-                        <tr><th>User</th><th>Minutes</th><th>Date</th><th>Description</th></tr>
-                    </thead>
-                    <tbody>
-                        @foreach($task->timeLogs as $log)
-                        <tr>
-                            <td>{{ $log->user->name }}</td>
-                            <td>{{ $log->minutes }}</td>
-                            <td>{{ $log->logged_date->format('M d, Y') }}</td>
-                            <td>{{ $log->description ?? '-' }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr><th>User</th><th>Minutes</th><th>Date</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach($task->timeLogs as $log)
+                            <tr>
+                                <td>{{ $log->user->name }}</td>
+                                <td>{{ $log->minutes }}</td>
+                                <td>{{ $log->logged_date->format('M d, Y') }}</td>
+                                <td>{{ $log->description ?? '-' }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         @endif
@@ -225,7 +229,7 @@
                 <div class="row g-2">
                     @foreach($images as $asset)
                     <div class="col-md-4 col-6">
-                        <div class="position-relative border rounded p-1 text-center" style="height:140px; overflow:hidden;">
+                        <div class="position-relative border rounded p-1 text-center media-container-sm" style="height:140px;">
                             <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank">
                                 <img src="{{ asset('storage/' . $asset->file_path) }}" class="img-fluid" style="max-height:100px" alt="{{ $asset->name }}">
                             </a>
@@ -263,7 +267,7 @@
                 <div class="row g-2">
                     @foreach($videos as $asset)
                     <div class="col-md-4 col-6">
-                        <div class="position-relative border rounded p-1 text-center" style="height:140px; overflow:hidden;">
+                        <div class="position-relative border rounded p-1 text-center media-container-sm" style="height:140px;">
                             <video src="{{ asset('storage/' . $asset->file_path) }}" class="img-fluid" style="max-height:100px" controls></video>
                             <div class="mt-1 d-flex justify-content-between align-items-center">
                                 <small class="text-muted text-truncate d-inline-block" style="max-width:100px">{{ $asset->name }}</small>

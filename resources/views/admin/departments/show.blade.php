@@ -72,21 +72,23 @@
     <div class="card-header">Recent Tasks</div>
     <div class="card-body">
         @if($department->tasks->count())
-        <table class="table table-sm">
-            <thead>
-                <tr><th>Title</th><th>Status</th><th>Assigned To</th><th>Created</th></tr>
-            </thead>
-            <tbody>
-                @foreach($department->tasks as $task)
-                <tr>
-                    <td>{{ $task->title }}</td>
-                    <td><span class="badge bg-{{ $task->status->value === 'done' ? 'success' : ($task->status->value === 'blocked' ? 'danger' : 'secondary') }}">{{ $task->status->label() }}</span></td>
-                    <td>{{ $task->assignee?->name ?? 'Unassigned' }}</td>
-                    <td>{{ $task->created_at->format('Y-m-d') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr><th>Title</th><th>Status</th><th>Assigned To</th><th>Created</th></tr>
+                </thead>
+                <tbody>
+                    @foreach($department->tasks as $task)
+                    <tr>
+                        <td>{{ $task->title }}</td>
+                        <td><span class="badge bg-{{ $task->status->value === 'done' ? 'success' : ($task->status->value === 'blocked' ? 'danger' : 'secondary') }}">{{ $task->status->label() }}</span></td>
+                        <td>{{ $task->assignee?->name ?? 'Unassigned' }}</td>
+                        <td>{{ $task->created_at->format('Y-m-d') }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @else
         <p class="text-muted mb-0">No tasks.</p>
         @endif

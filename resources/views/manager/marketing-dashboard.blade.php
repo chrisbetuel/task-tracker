@@ -14,7 +14,7 @@
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <div class="card text-bg-primary">
+        <div class="card text-bg-primary stat-card">
             <div class="card-body text-center">
                 <h6>Projects</h6>
                 <p class="display-6">{{ $stats['projects_count'] }}</p>
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-success">
+        <div class="card text-bg-success stat-card">
             <div class="card-body text-center">
                 <h6>Tasks</h6>
                 <p class="display-6">{{ $stats['tasks_count'] }}</p>
@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-info">
+        <div class="card text-bg-info stat-card">
             <div class="card-body text-center">
                 <h6>Team Members</h6>
                 <p class="display-6">{{ $stats['team_members_count'] }}</p>
@@ -38,7 +38,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-warning">
+        <div class="card text-bg-warning stat-card">
             <div class="card-body text-center">
                 <h6>Content Output (30d)</h6>
                 <p class="display-6">{{ $contentOutput }}</p>

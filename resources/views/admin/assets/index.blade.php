@@ -43,7 +43,7 @@
             @foreach($assets as $asset)
             <div class="col-md-3 col-6">
                 <div class="card h-100">
-                    <div class="position-relative" style="height:180px; overflow:hidden; background:#f5f5f5;">
+                    <div class="position-relative media-container">
                         @if($asset->type === 'video')
                         <video src="{{ asset('storage/' . $asset->file_path) }}" class="w-100 h-100" style="object-fit:contain" controls></video>
                         @else

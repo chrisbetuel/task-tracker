@@ -25,6 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks/{task}/assets/video', [App\Http\Controllers\AssetController::class, 'storeVideo'])->name('assets.store-video');
     Route::delete('/assets/{asset}', [App\Http\Controllers\AssetController::class, 'destroy'])->name('assets.destroy');
     Route::post('/projects/{project}/comments', [App\Http\Controllers\CommentController::class, 'store'])->name('comments.store');
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
 });
 
 

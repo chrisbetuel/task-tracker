@@ -12,22 +12,24 @@
 <div class="card mb-3">
     <div class="card-header">Existing Sub-Projects</div>
     <div class="card-body p-0">
-        <table class="table table-sm mb-0">
-            <thead>
-                <tr><th>Name</th><th>Tasks</th><th></th></tr>
-            </thead>
-            <tbody>
-                @foreach($project->children as $child)
-                <tr>
-                    <td><a href="{{ route('manager.projects.show', $child) }}">{{ $child->name }}</a></td>
-                    <td>{{ $child->tasks_count ?? 0 }}</td>
-                    <td class="text-end">
-                        <a href="{{ route('manager.projects.edit', $child) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr><th>Name</th><th>Tasks</th><th></th></tr>
+                </thead>
+                <tbody>
+                    @foreach($project->children as $child)
+                    <tr>
+                        <td><a href="{{ route('manager.projects.show', $child) }}">{{ $child->name }}</a></td>
+                        <td>{{ $child->tasks_count ?? 0 }}</td>
+                        <td class="text-end">
+                            <a href="{{ route('manager.projects.edit', $child) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endif

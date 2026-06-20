@@ -18,7 +18,7 @@
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <div class="card text-bg-info">
+        <div class="card text-bg-info stat-card">
             <div class="card-body text-center">
                 <h6>Progress</h6>
                 <p class="display-6">{{ $progress['completion_percentage'] }}%</p>
@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-warning">
+        <div class="card text-bg-warning stat-card">
             <div class="card-body text-center">
                 <h6>Blocked</h6>
                 <p class="display-6">{{ $progress['blocked_tasks'] }}</p>
@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-success">
+        <div class="card text-bg-success stat-card">
             <div class="card-body text-center">
                 <h6>Time Spent</h6>
                 <p class="display-6">{{ $timeSpent['total_hours'] }}h</p>
@@ -45,7 +45,7 @@
     </div>
     <div class="col-md-3">
         @php $pUrl = $project->effectiveUrl(); @endphp
-        <div class="card text-bg-dark">
+        <div class="card text-bg-dark stat-card">
             <div class="card-body text-center">
                 <h6>Project Link</h6>
                 @if($pUrl)
@@ -114,129 +114,131 @@
     </div>
     <div class="card-body">
         @if($project->tasks->count())
-        <table class="table table-sm">
-            <thead>
-                <tr><th>Title</th><th>Status</th><th>Assignee</th><th>Blocked</th><th>Media</th></tr>
-            </thead>
-            <tbody>
-                @foreach($project->tasks as $task)
-                <tr class="table-active">
-                    <td>
-                        <i class="bi bi-diagram-2 me-1 text-muted"></i>
-                        <a href="{{ route('member.tasks.show', $task) }}">{{ $task->title }}</a>
-                        <a href="{{ route('member.tasks.create') }}?parent_task_id={{ $task->id }}&project_id={{ $project->id }}" class="btn btn-sm btn-outline-primary py-0 px-1 ms-1" title="Add Sub-Task">
-                            <i class="bi bi-plus-lg"></i>
-                        </a>
-                        <span class="badge bg-info ms-1">{{ $task->children->count() }} sub</span>
-                    </td>
-                    <td><span class="badge bg-{{ $task->status->value === 'done' ? 'success' : ($task->status->value === 'blocked' ? 'danger' : ($task->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">{{ $task->status->label() }}</span></td>
-                    <td>{{ $task->assignee?->name ?? 'Unassigned' }}</td>
-                    <td>{{ $task->activeBlockages->count() ? 'Yes' : 'No' }}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm mb-1" role="group">
-                            <form method="POST" action="{{ route('member.tasks.status', $task) }}" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="status" value="pending_accept">
-                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="font-size:0.6rem">Pending</button>
-                            </form>
-                            <form method="POST" action="{{ route('member.tasks.status', $task) }}" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="status" value="in_progress">
-                                <button type="submit" class="btn btn-outline-primary btn-sm" style="font-size:0.6rem">To Do</button>
-                            </form>
-                            <form method="POST" action="{{ route('member.tasks.status', $task) }}" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="status" value="done">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="font-size:0.6rem">Done</button>
-                            </form>
-                        </div>
-                        @php $taskImages = $task->assets->where('type', 'image'); @endphp
-                        @php $taskVideos = $task->assets->where('type', 'video'); @endphp
-                        <div class="d-flex flex-wrap align-items-center gap-1 mb-1">
-                            @foreach($taskImages as $asset)
-                            <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank">
-                                <img src="{{ asset('storage/' . $asset->file_path) }}" class="border rounded" style="width:28px;height:28px;object-fit:cover;" alt="{{ $asset->name }}">
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr><th>Title</th><th>Status</th><th>Assignee</th><th>Blocked</th><th>Media</th></tr>
+                </thead>
+                <tbody>
+                    @foreach($project->tasks as $task)
+                    <tr class="table-active">
+                        <td class="text-nowrap">
+                            <i class="bi bi-diagram-2 me-1 text-muted"></i>
+                            <a href="{{ route('member.tasks.show', $task) }}">{{ $task->title }}</a>
+                            <a href="{{ route('member.tasks.create') }}?parent_task_id={{ $task->id }}&project_id={{ $project->id }}" class="btn btn-sm btn-outline-primary py-0 px-1 ms-1" title="Add Sub-Task">
+                                <i class="bi bi-plus-lg"></i>
                             </a>
-                            @endforeach
-                            @foreach($taskVideos as $asset)
-                            <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="{{ $asset->name }}">
-                                <i class="bi bi-film"></i>
-                            </a>
-                            @endforeach
-                        </div>
-                        <div class="d-flex gap-1">
-                            <form method="POST" action="{{ route('assets.store-image', $task) }}" enctype="multipart/form-data" class="d-inline">
-                                @csrf
-                                <input type="file" name="file" class="d-none" accept="image/*" required onchange="this.form.submit()" id="img-{{ $task->id }}">
-                                <button type="button" class="btn btn-sm btn-outline-info py-0 px-1" title="Upload Picture" onclick="document.getElementById('img-{{ $task->id }}').click()"><i class="bi bi-image"></i></button>
-                            </form>
-                            <form method="POST" action="{{ route('assets.store-video', $task) }}" enctype="multipart/form-data" class="d-inline">
-                                @csrf
-                                <input type="file" name="file" class="d-none" accept="video/*" required onchange="this.form.submit()" id="vid-{{ $task->id }}">
-                                <button type="button" class="btn btn-sm btn-outline-warning py-0 px-1" title="Upload Video" onclick="document.getElementById('vid-{{ $task->id }}').click()"><i class="bi bi-film"></i></button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @foreach($task->children as $child)
-                <tr>
-                    <td style="padding-left: 2.5rem;">
-                        <i class="bi bi-arrow-return-right me-1 text-muted"></i>
-                        <a href="{{ route('member.tasks.show', $child) }}">{{ $child->title }}</a>
-                    </td>
-                    <td><span class="badge bg-{{ $child->status->value === 'done' ? 'success' : ($child->status->value === 'blocked' ? 'danger' : ($child->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">{{ $child->status->label() }}</span></td>
-                    <td>{{ $child->assignee?->name ?? 'Unassigned' }}</td>
-                    <td>{{ $child->activeBlockages->count() ? 'Yes' : 'No' }}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm mb-1" role="group">
-                            <form method="POST" action="{{ route('member.tasks.status', $child) }}" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="status" value="pending_accept">
-                                <button type="submit" class="btn btn-outline-secondary btn-sm" style="font-size:0.6rem">Pending</button>
-                            </form>
-                            <form method="POST" action="{{ route('member.tasks.status', $child) }}" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="status" value="in_progress">
-                                <button type="submit" class="btn btn-outline-primary btn-sm" style="font-size:0.6rem">To Do</button>
-                            </form>
-                            <form method="POST" action="{{ route('member.tasks.status', $child) }}" class="d-inline">
-                                @csrf
-                                <input type="hidden" name="status" value="done">
-                                <button type="submit" class="btn btn-outline-success btn-sm" style="font-size:0.6rem">Done</button>
-                            </form>
-                        </div>
-                        @php $childImages = $child->assets->where('type', 'image'); @endphp
-                        @php $childVideos = $child->assets->where('type', 'video'); @endphp
-                        <div class="d-flex flex-wrap align-items-center gap-1 mb-1">
-                            @foreach($childImages as $asset)
-                            <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank">
-                                <img src="{{ asset('storage/' . $asset->file_path) }}" class="border rounded" style="width:28px;height:28px;object-fit:cover;" alt="{{ $asset->name }}">
-                            </a>
-                            @endforeach
-                            @foreach($childVideos as $asset)
-                            <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="{{ $asset->name }}">
-                                <i class="bi bi-film"></i>
-                            </a>
-                            @endforeach
-                        </div>
-                        <div class="d-flex gap-1">
-                            <form method="POST" action="{{ route('assets.store-image', $child) }}" enctype="multipart/form-data" class="d-inline">
-                                @csrf
-                                <input type="file" name="file" class="d-none" accept="image/*" required onchange="this.form.submit()" id="img-{{ $child->id }}">
-                                <button type="button" class="btn btn-sm btn-outline-info py-0 px-1" title="Upload Picture" onclick="document.getElementById('img-{{ $child->id }}').click()"><i class="bi bi-image"></i></button>
-                            </form>
-                            <form method="POST" action="{{ route('assets.store-video', $child) }}" enctype="multipart/form-data" class="d-inline">
-                                @csrf
-                                <input type="file" name="file" class="d-none" accept="video/*" required onchange="this.form.submit()" id="vid-{{ $child->id }}">
-                                <button type="button" class="btn btn-sm btn-outline-warning py-0 px-1" title="Upload Video" onclick="document.getElementById('vid-{{ $child->id }}').click()"><i class="bi bi-film"></i></button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-                @endforeach
-            </tbody>
-        </table>
+                            <span class="badge bg-info ms-1">{{ $task->children->count() }} sub</span>
+                        </td>
+                        <td><span class="badge bg-{{ $task->status->value === 'done' ? 'success' : ($task->status->value === 'blocked' ? 'danger' : ($task->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">{{ $task->status->label() }}</span></td>
+                        <td>{{ $task->assignee?->name ?? 'Unassigned' }}</td>
+                        <td>{{ $task->activeBlockages->count() ? 'Yes' : 'No' }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm mb-1 btn-group-responsive" role="group">
+                                <form method="POST" action="{{ route('member.tasks.status', $task) }}" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="pending_accept">
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="font-size:0.6rem">Pending</button>
+                                </form>
+                                <form method="POST" action="{{ route('member.tasks.status', $task) }}" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="in_progress">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm" style="font-size:0.6rem">To Do</button>
+                                </form>
+                                <form method="POST" action="{{ route('member.tasks.status', $task) }}" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="done">
+                                    <button type="submit" class="btn btn-outline-success btn-sm" style="font-size:0.6rem">Done</button>
+                                </form>
+                            </div>
+                            @php $taskImages = $task->assets->where('type', 'image'); @endphp
+                            @php $taskVideos = $task->assets->where('type', 'video'); @endphp
+                            <div class="d-flex flex-wrap align-items-center gap-1 mb-1">
+                                @foreach($taskImages as $asset)
+                                <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $asset->file_path) }}" class="border rounded" style="width:28px;height:28px;object-fit:cover;" alt="{{ $asset->name }}">
+                                </a>
+                                @endforeach
+                                @foreach($taskVideos as $asset)
+                                <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="{{ $asset->name }}">
+                                    <i class="bi bi-film"></i>
+                                </a>
+                                @endforeach
+                            </div>
+                            <div class="d-flex gap-1 flex-wrap">
+                                <form method="POST" action="{{ route('assets.store-image', $task) }}" enctype="multipart/form-data" class="d-inline">
+                                    @csrf
+                                    <input type="file" name="file" class="d-none" accept="image/*" required onchange="this.form.submit()" id="img-{{ $task->id }}">
+                                    <button type="button" class="btn btn-sm btn-outline-info py-0 px-1" title="Upload Picture" onclick="document.getElementById('img-{{ $task->id }}').click()"><i class="bi bi-image"></i></button>
+                                </form>
+                                <form method="POST" action="{{ route('assets.store-video', $task) }}" enctype="multipart/form-data" class="d-inline">
+                                    @csrf
+                                    <input type="file" name="file" class="d-none" accept="video/*" required onchange="this.form.submit()" id="vid-{{ $task->id }}">
+                                    <button type="button" class="btn btn-sm btn-outline-warning py-0 px-1" title="Upload Video" onclick="document.getElementById('vid-{{ $task->id }}').click()"><i class="bi bi-film"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @foreach($task->children as $child)
+                    <tr>
+                        <td style="padding-left: 2.5rem;" class="text-nowrap">
+                            <i class="bi bi-arrow-return-right me-1 text-muted"></i>
+                            <a href="{{ route('member.tasks.show', $child) }}">{{ $child->title }}</a>
+                        </td>
+                        <td><span class="badge bg-{{ $child->status->value === 'done' ? 'success' : ($child->status->value === 'blocked' ? 'danger' : ($child->status->value === 'in_progress' ? 'primary' : 'secondary')) }}">{{ $child->status->label() }}</span></td>
+                        <td>{{ $child->assignee?->name ?? 'Unassigned' }}</td>
+                        <td>{{ $child->activeBlockages->count() ? 'Yes' : 'No' }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm mb-1 btn-group-responsive" role="group">
+                                <form method="POST" action="{{ route('member.tasks.status', $child) }}" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="pending_accept">
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm" style="font-size:0.6rem">Pending</button>
+                                </form>
+                                <form method="POST" action="{{ route('member.tasks.status', $child) }}" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="in_progress">
+                                    <button type="submit" class="btn btn-outline-primary btn-sm" style="font-size:0.6rem">To Do</button>
+                                </form>
+                                <form method="POST" action="{{ route('member.tasks.status', $child) }}" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="status" value="done">
+                                    <button type="submit" class="btn btn-outline-success btn-sm" style="font-size:0.6rem">Done</button>
+                                </form>
+                            </div>
+                            @php $childImages = $child->assets->where('type', 'image'); @endphp
+                            @php $childVideos = $child->assets->where('type', 'video'); @endphp
+                            <div class="d-flex flex-wrap align-items-center gap-1 mb-1">
+                                @foreach($childImages as $asset)
+                                <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $asset->file_path) }}" class="border rounded" style="width:28px;height:28px;object-fit:cover;" alt="{{ $asset->name }}">
+                                </a>
+                                @endforeach
+                                @foreach($childVideos as $asset)
+                                <a href="{{ asset('storage/' . $asset->file_path) }}" target="_blank" class="btn btn-sm btn-outline-secondary py-0 px-1" title="{{ $asset->name }}">
+                                    <i class="bi bi-film"></i>
+                                </a>
+                                @endforeach
+                            </div>
+                            <div class="d-flex gap-1 flex-wrap">
+                                <form method="POST" action="{{ route('assets.store-image', $child) }}" enctype="multipart/form-data" class="d-inline">
+                                    @csrf
+                                    <input type="file" name="file" class="d-none" accept="image/*" required onchange="this.form.submit()" id="img-{{ $child->id }}">
+                                    <button type="button" class="btn btn-sm btn-outline-info py-0 px-1" title="Upload Picture" onclick="document.getElementById('img-{{ $child->id }}').click()"><i class="bi bi-image"></i></button>
+                                </form>
+                                <form method="POST" action="{{ route('assets.store-video', $child) }}" enctype="multipart/form-data" class="d-inline">
+                                    @csrf
+                                    <input type="file" name="file" class="d-none" accept="video/*" required onchange="this.form.submit()" id="vid-{{ $child->id }}">
+                                    <button type="button" class="btn btn-sm btn-outline-warning py-0 px-1" title="Upload Video" onclick="document.getElementById('vid-{{ $child->id }}').click()"><i class="bi bi-film"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         @else
         <div class="text-center py-4">
             <i class="bi bi-inbox display-5 text-muted"></i>

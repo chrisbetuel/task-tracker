@@ -20,6 +20,46 @@
                 <ul class="navbar-nav ms-auto">
                     @auth
                         <li class="nav-item dropdown">
+                            <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-bell fs-5"></i>
+                                @php $unreadCount = auth()->user()->unreadNotifications->count(); @endphp
+                                @if ($unreadCount > 0)
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">
+                                        {{ $unreadCount > 99 ? '99+' : $unreadCount }}
+                                    </span>
+                                @endif
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" style="width: 320px;">
+                                @forelse (auth()->user()->unreadNotifications->take(5) as $notification)
+                                    @php $data = $notification->data; @endphp
+                                    <li>
+                                        <a class="dropdown-item text-wrap" href="{{ route('notifications.index') }}">
+                                            <strong>{{ $data['user_name'] ?? 'Someone' }}</strong>
+                                            commented on <strong>{{ $data['project_name'] ?? 'a project' }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                                        </a>
+                                    </li>
+                                    @if (!$loop->last)
+                                        <li><hr class="dropdown-divider m-0"></li>
+                                    @endif
+                                @empty
+                                    <li><span class="dropdown-item text-muted">No new notifications</span></li>
+                                @endforelse
+                                @if ($unreadCount > 0)
+                                    <li><hr class="dropdown-divider m-0"></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('notifications.mark-all-read') }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item text-center small text-primary">Mark all as read</button>
+                                        </form>
+                                    </li>
+                                @endif
+                                <li><hr class="dropdown-divider m-0"></li>
+                                <li><a class="dropdown-item text-center small" href="{{ route('notifications.index') }}">View all notifications</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                                 {{ auth()->user()->name }}
                             </a>

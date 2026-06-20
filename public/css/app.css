@@ -336,6 +336,24 @@ a:hover {
   background-color: var(--dark-blue);
 }
 
+.media-container {
+  height: 180px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.media-container-sm {
+  height: 120px;
+  overflow: hidden;
+}
+
+@media (min-width: 576px) {
+  .table th,
+  .table td {
+    white-space: normal;
+  }
+}
+
 @media (max-width: 575.98px) {
   h2 {
     font-size: 1.15rem;
@@ -425,6 +443,39 @@ a:hover {
   .offcanvas-body .list-group-item {
     padding: 0.65rem 1rem;
     font-size: 0.85rem;
+  }
+
+  .media-container {
+    height: 100px !important;
+  }
+
+  .stat-card .display-6 {
+    font-size: 1.4rem !important;
+  }
+
+  .stat-card h6 {
+    font-size: 0.65rem;
+  }
+
+  .btn-group-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .btn-group-responsive .btn {
+    flex: 1 1 auto;
+    min-width: 60px;
+  }
+
+  .table th,
+  .table td {
+    white-space: nowrap;
+  }
+
+  .detail-grid .col-md-3,
+  .detail-grid .col-md-4 {
+    margin-bottom: 0.5rem;
   }
 }
 

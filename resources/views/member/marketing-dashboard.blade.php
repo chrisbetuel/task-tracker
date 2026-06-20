@@ -12,7 +12,7 @@
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <div class="card text-bg-primary">
+        <div class="card text-bg-primary stat-card">
             <div class="card-body text-center">
                 <h6>My Tasks</h6>
                 <p class="display-6">{{ $stats['total_tasks'] }}</p>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-success">
+        <div class="card text-bg-success stat-card">
             <div class="card-body text-center">
                 <h6>Done</h6>
                 <p class="display-6">{{ $stats['done_tasks'] }}</p>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-info">
+        <div class="card text-bg-info stat-card">
             <div class="card-body text-center">
                 <h6>In Progress</h6>
                 <p class="display-6">{{ $stats['in_progress'] }}</p>
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-warning">
+        <div class="card text-bg-warning stat-card">
             <div class="card-body text-center">
                 <h6>Pending Approval</h6>
                 <p class="display-6">{{ $myApprovals->count() }}</p>

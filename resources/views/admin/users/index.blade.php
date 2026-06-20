@@ -39,28 +39,30 @@
 <div class="card">
     <div class="card-body">
         @if($users->count())
-        <table class="table table-striped">
-            <thead>
-                <tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Actions</th></tr>
-            </thead>
-            <tbody>
-                @foreach($users as $user)
-                <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td><span class="badge bg-{{ $user->role->value === 'admin' ? 'danger' : ($user->role->value === 'head_of_operation' ? 'dark' : ($user->role->value === 'manager' ? 'warning' : 'info')) }}">{{ $user->role->label() }}</span></td>
-                    <td>{{ $user->department?->name ?? 'N/A' }}</td>
-                    <td>
-                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="d-inline" onsubmit="return confirm('Delete user {{ $user->name }}? This cannot be undone.')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr><th>Name</th><th>Email</th><th>Role</th><th>Department</th><th>Actions</th></tr>
+                </thead>
+                <tbody>
+                    @foreach($users as $user)
+                    <tr>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td><span class="badge bg-{{ $user->role->value === 'admin' ? 'danger' : ($user->role->value === 'head_of_operation' ? 'dark' : ($user->role->value === 'manager' ? 'warning' : 'info')) }}">{{ $user->role->label() }}</span></td>
+                        <td>{{ $user->department?->name ?? 'N/A' }}</td>
+                        <td>
+                            <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="d-inline" onsubmit="return confirm('Delete user {{ $user->name }}? This cannot be undone.')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
         {{ $users->links() }}
         @else
         <p class="text-muted mb-0">No users found.</p>

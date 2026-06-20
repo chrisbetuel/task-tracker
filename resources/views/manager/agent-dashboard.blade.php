@@ -14,7 +14,7 @@
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <div class="card text-bg-primary">
+        <div class="card text-bg-primary stat-card">
             <div class="card-body text-center">
                 <h6>Projects</h6>
                 <p class="display-6">{{ $stats['projects_count'] }}</p>
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-success">
+        <div class="card text-bg-success stat-card">
             <div class="card-body text-center">
                 <h6>Total Tickets</h6>
                 <p class="display-6">{{ $stats['tasks_count'] }}</p>
@@ -30,7 +30,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-info">
+        <div class="card text-bg-info stat-card">
             <div class="card-body text-center">
                 <h6>Team Members</h6>
                 <p class="display-6">{{ $stats['team_members_count'] }}</p>
@@ -38,7 +38,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card {{ $queueStats['sla_breached'] ? 'text-bg-danger' : 'text-bg-warning' }}">
+        <div class="card {{ $queueStats['sla_breached'] ? 'text-bg-danger' : 'text-bg-warning' }} stat-card">
             <div class="card-body text-center">
                 <h6>SLA Breached</h6>
                 <p class="display-6">{{ $queueStats['sla_breached'] }}</p>

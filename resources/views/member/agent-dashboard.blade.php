@@ -12,7 +12,7 @@
 
 <div class="row mb-4">
     <div class="col-md-3">
-        <div class="card text-bg-primary">
+        <div class="card text-bg-primary stat-card">
             <div class="card-body text-center">
                 <h6>My Tickets</h6>
                 <p class="display-6">{{ $stats['total_tasks'] }}</p>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-success">
+        <div class="card text-bg-success stat-card">
             <div class="card-body text-center">
                 <h6>Resolved Today</h6>
                 <p class="display-6">{{ $agentStats['today_resolved'] }}</p>
@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card text-bg-info">
+        <div class="card text-bg-info stat-card">
             <div class="card-body text-center">
                 <h6>In Progress</h6>
                 <p class="display-6">{{ $stats['in_progress'] }}</p>
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card {{ $agentStats['sla_breaches'] > 0 ? 'text-bg-danger' : 'text-bg-warning' }}">
+        <div class="card {{ $agentStats['sla_breaches'] > 0 ? 'text-bg-danger' : 'text-bg-warning' }} stat-card">
             <div class="card-body text-center">
                 <h6>SLA Breaches</h6>
                 <p class="display-6">{{ $agentStats['sla_breaches'] }}</p>
